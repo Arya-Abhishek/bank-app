@@ -16,3 +16,7 @@ spring:
         ddl-auto: auto
         show-sql: true
         format-sql: true
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
