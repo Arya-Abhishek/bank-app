@@ -36,6 +36,26 @@ public class LoansServiceImpl implements ILoansService {
         return LoansMapper.mapToLoansDto(loans, new LoansDto());
     }
 
+    @Override
+    public boolean updateLoan(LoansDto loansDto) {
+        // loan number will not change and be unique, other fields can be updated
+
+        Loans loans = loansRepository.findByLoanNumber(loansDto.getLoanNumber())
+                .orElseThrow(() -> new ResourceNotFoundException("Loan","loanNumber", loansDto.getLoanNumber()));
+        LoansMapper.mapToLoans(loansDto, loans);
+        loansRepository.save(loans);
+        return true;
+    }
+
+    @Override
+    public boolean deleteLoan(String mobileNumber) {
+        Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Loan", "mobileNumber", mobileNumber)
+        );
+        loansRepository.deleteById(loans.getLoanId());
+        return true;
+    }
+
     /*
     * @param mobileNumber - Mobile Number of the Customer
     * @return - New Loans Object

@@ -15,4 +15,16 @@ public interface ILoansService {
     * @return - LoansDto Object
     * */
     LoansDto fetchLoan(String mobileNumber);
+
+    /*
+    * @param loansDto - LoansDto Object
+    * @return - boolean
+    * */
+    boolean updateLoan(LoansDto loansDto);
+
+    /*
+    * @param mobileNumber - Mobile Number of the Customer
+    * @return - boolean
+    * */
+    boolean deleteLoan(String mobileNumber);
 }

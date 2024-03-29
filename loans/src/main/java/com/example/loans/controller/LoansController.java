@@ -4,6 +4,7 @@ import com.example.loans.constants.LoansConstants;
 import com.example.loans.dto.LoansDto;
 import com.example.loans.dto.ResponseDto;
 import com.example.loans.service.ILoansService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,5 +31,34 @@ public class LoansController {
         LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(loansDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateLoanDetails(@Valid @RequestBody LoansDto loansDto) {
+        boolean isUpdated = iLoansService.updateLoan(loansDto);
+        if(isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    @DeleteMapping("/delete")
+public ResponseEntity<ResponseDto> deleteLoanDetails(@RequestParam String mobileNumber) {
+        boolean isDeleted = iLoansService.deleteLoan(mobileNumber);
+
+        if(isDeleted) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
+        }
     }
 }
