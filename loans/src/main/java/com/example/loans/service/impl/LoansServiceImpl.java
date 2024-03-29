@@ -1,8 +1,11 @@
 package com.example.loans.service.impl;
 
 import com.example.loans.constants.LoansConstants;
+import com.example.loans.dto.LoansDto;
 import com.example.loans.entity.Loans;
 import com.example.loans.exception.LoanAlreadyExistsException;
+import com.example.loans.exception.ResourceNotFoundException;
+import com.example.loans.mapper.LoansMapper;
 import com.example.loans.repository.LoansRepository;
 import com.example.loans.service.ILoansService;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,14 @@ public class LoansServiceImpl implements ILoansService {
              throw new LoanAlreadyExistsException("Loan already exists for the given mobile number " + mobileNumber);
         }
         loansRepository.save(createNewLoan(mobileNumber));
+    }
+
+    @Override
+    public LoansDto fetchLoan(String mobileNumber) {
+        Loans loans = loansRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan","mobileNumber", mobileNumber));
+
+        return LoansMapper.mapToLoansDto(loans, new LoansDto());
     }
 
     /*
